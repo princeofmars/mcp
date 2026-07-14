@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enterprise MCP Gateway</title>
+  <link rel="stylesheet" href="/static/dashboard.css">
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">ENTERPRISE CONTROL PLANE</p>
+      <h1>MCP Health Gateway</h1>
+      <p class="subtitle">Onboard tenants and agents, manage permissions and credentials, and monitor every tool decision.</p>
+    </div>
+    <div class="connection">
+      <span id="connection-dot"></span>
+      <span id="connection-label">Not connected</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="panel auth-panel">
+      <div>
+        <h2>Administrator access</h2>
+        <p>Enter an admin key. The local demo key is <code>adm_demo_change_me</code>.</p>
+      </div>
+      <form id="auth-form" class="inline-form">
+        <input id="admin-key" type="password" placeholder="adm_..." autocomplete="off" required>
+        <button type="submit">Connect</button>
+      </form>
+    </section>
+
+    <section class="panel onboarding-panel">
+      <div>
+        <h2>Onboard a new enterprise</h2>
+        <p>Create a tenant and receive a one-time administrator key.</p>
+      </div>
+      <form id="onboard-form" class="form-grid">
+        <input id="org-name" placeholder="Organization name" required>
+        <input id="admin-email" type="email" placeholder="Admin email" required>
+        <button type="submit">Create tenant</button>
+      </form>
+      <pre id="onboard-result" class="hidden"></pre>
+    </section>
+
+    <section id="app-content" class="hidden">
+      <div class="toolbar">
+        <div>
+          <h2 id="tenant-name">Tenant</h2>
+          <p id="tenant-meta"></p>
+        </div>
+        <button id="refresh-button" class="secondary">Refresh</button>
+      </div>
+
+      <div class="metrics" id="metrics"></div>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div><h2>Gateway activity</h2><p>Hourly tool calls, including allowed and denied executions.</p></div>
+        </div>
+        <div id="activity-timeline" class="timeline"></div>
+      </section>
+
+      <div class="two-column">
+        <section class="panel">
+          <div class="section-heading">
+            <div><h2>Tool usage</h2><p>Calls during the selected 24-hour window.</p></div>
+          </div>
+          <div id="tool-usage" class="bars"></div>
+        </section>
+        <section class="panel">
+          <div class="section-heading">
+            <div><h2>Register agent</h2><p>Tokens are shown once and stored only as hashes.</p></div>
+          </div>
+          <form id="agent-form" class="stack-form">
+            <input id="agent-name" placeholder="Agent name" required>
+            <select id="agent-env">
+              <option value="development">Development</option>
+              <option value="staging">Staging</option>
+              <option value="production">Production</option>
+            </select>
+            <div id="tool-checkboxes" class="checkboxes"></div>
+            <button type="submit">Create agent</button>
+          </form>
+          <pre id="agent-result" class="hidden"></pre>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div><h2>Agents</h2><p>Environment, status and last activity.</p></div>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Name</th><th>Environment</th><th>Status</th><th>Tools</th><th>Last seen</th></tr></thead><tbody id="agents-table"></tbody></table></div>
+      </section>
+
+      <div class="two-column">
+        <section class="panel">
+          <div class="section-heading"><div><h2>Credential vault</h2><p>Encrypted at rest and never returned by the API.</p></div></div>
+          <form id="credential-form" class="stack-form">
+            <input id="credential-provider" placeholder="Provider, e.g. garmin" required>
+            <input id="credential-name" placeholder="Credential name" required>
+            <input id="credential-secret" type="password" placeholder="Secret" required>
+            <button type="submit">Store credential</button>
+          </form>
+          <div class="table-wrap compact"><table><thead><tr><th>Provider</th><th>Name</th><th>Updated</th></tr></thead><tbody id="credentials-table"></tbody></table></div>
+        </section>
+        <section class="panel">
+          <div class="section-heading"><div><h2>Connection details</h2><p>Use an agent token as a bearer credential.</p></div></div>
+          <div class="code-card">
+            <span>MCP endpoint</span>
+            <code>http://localhost:8001/mcp</code>
+            <span>Authorization</span>
+            <code>Authorization: Bearer mcp_...</code>
+          </div>
+        </section>
+      </div>
+
+      <section class="panel">
+        <div class="section-heading">
+          <div><h2>Recent audit events</h2><p>Policy decisions, outcomes and latency. Member references are pseudonymized.</p></div>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Time</th><th>Agent</th><th>Tool</th><th>Purpose</th><th>Decision</th><th>Status</th><th>Latency</th></tr></thead><tbody id="audit-table"></tbody></table></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/static/dashboard.js"></script>
+</body>
+</html>
