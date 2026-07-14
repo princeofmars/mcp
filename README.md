@@ -137,3 +137,4 @@ This repository is an MVP, not a compliance certification. Before production, ad
 - Member identifiers are hashed before audit storage.
 - Tools return evidence, confidence, limitations and explicit non-diagnostic boundaries.
 - Reward and prevention outputs require human review in this MVP.
+Triggering redeploy to clear Dockerfile validation cache.
