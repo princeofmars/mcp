@@ -1,0 +1,13 @@
+{
+  "services": [
+    {
+      "name": "mcp",
+      "volumes": [
+        {
+          "mountPath": "/app/data",
+          "sizeGb": 1
+        }
+      ]
+    }
+  ]
+}
