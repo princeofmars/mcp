@@ -10,7 +10,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from sqlalchemy import func, select
+from sqlalchemy import func, select, text
 from sqlalchemy.orm import Session
 
 from app.bootstrap import initialize, slugify
@@ -38,6 +38,12 @@ templates = Jinja2Templates(directory=BASE_DIR / "templates")
 @app.on_event("startup")
 def startup() -> None:
     initialize()
+    # Prune audit logs older than 30 days
+    from app.db import engine
+    with engine.connect() as conn:
+        conn.execute(text("DELETE FROM audit_events WHERE created_at < date('now', '-30 days')"))
+        conn.execute(text("VACUUM"))
+        conn.commit()
 
 
 def admin_tenant(
